@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+  <title>Jahid | Portfolio</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    /* Global resets & fixes */
+    html, body {
+      max-width: 100vw;
+      overflow-x: hidden;
+      box-sizing: border-box;
+      margin: 0; padding: 0;
+      scroll-behavior: smooth;
+      scroll-padding-top: 70px;
+      font-family: 'Poppins', sans-serif;
+      transition: background-color 0.5s ease, color 0.5s ease;
+      min-height: 100vh;
+    }
+    *, *::before, *::after {
+      box-sizing: inherit;
+    }
+
+    body.light {
+      background: #f9fafb;
+      color: #1f2937;
+    }
+    body.light a, body.light .gradient-text {
+      color: #db2777;
+    }
+    body.dark {
+      background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+      color: #e0e7ff;
+    }
+
+    /* Floating shapes for parallax */
+    .floating-shape {
+      position: absolute;
+      border-radius: 50%;
+      opacity: 0.15;
+      will-change: transform;
+      pointer-events: none;
+      z-index: -1;
+      transition: background-color 0.5s ease;
+    }
+    .shape1 {
+      width: 280px;
+      height: 280px;
+      top: -100px;
+      left: -100px;
+      background: #6366f1;
+    }
+    .shape2 {
+      width: 320px;
+      height: 320px;
+      bottom: -120px;
+      right: -120px;
+      background: #ec4899;
+    }
+    body.light .shape1 {
+      background: #a78bfa;
+    }
+    body.light .shape2 {
+      background: #fda4af;
+    }
+
+    /* Gradient animated text */
+    .gradient-text {
+      background: linear-gradient(90deg, #8b5cf6, #ec4899, #f59e0b);
+      background-size: 200% 200%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: gradientMove 5s ease infinite;
+      transition: color 0.5s ease;
+    }
+    @keyframes gradientMove {
+      0% {background-position: 0% 50%;}
+      50% {background-position: 100% 50%;}
+      100% {background-position: 0% 50%;}
+    }
+
+    /* Fade-up animation */
+    .fade-up {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 0.6s ease-out;
+    }
+    .fade-up.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    a, button {
+      transition: all 0.3s ease;
+    }
+    a:hover, button:hover {
+      color: #f472b6;
+      transform: scale(1.05);
+    }
+
+    .project-card {
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      background-color: #1f2937;
+      border-radius: 1rem;
+      padding: 1.5rem;
+      cursor: pointer;
+      box-shadow: 0 4px 10px rgba(236, 72, 153, 0.3);
+      color: #d1d5db;
+    }
+    .project-card:hover {
+      transform: translateY(-8px) scale(1.05);
+      box-shadow: 0 15px 30px rgba(236, 72, 153, 0.5);
+    }
+
+    /* Navbar */
+    nav {
+      background: rgba(0,0,0,0.5);
+      backdrop-filter: blur(10px);
+      box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%;
+      z-index: 50;
+    }
+    nav ul {
+      list-style: none;
+      display: flex;
+      gap: 1.5rem;
+      align-items: center;
+    }
+    nav ul li a {
+      font-weight: 600;
+      font-size: 1.125rem;
+      color: #f472b6;
+      text-decoration: none;
+    }
+    nav ul li a:hover {
+      color: #ec4899;
+    }
+
+    #mobile-menu-button {
+      display: none;
+      background: none;
+      border: none;
+      color: #f472b6;
+      font-size: 2rem;
+      cursor: pointer;
+    }
+
+    @media (max-width: 768px) {
+      #mobile-menu-button {
+        display: block;
+      }
+      #nav-links {
+        display: none;
+        flex-direction: column;
+        background: rgba(0,0,0,0.8);
+        position: absolute;
+        top: 70px;
+        right: 0;
+        width: 100vw;
+        padding: 1rem 2rem;
+        box-sizing: border-box;
+        gap: 1rem;
+        z-index: 100;
+      }
+      #nav-links.open {
+        display: flex;
+      }
+      nav ul li a {
+        font-size: 1.25rem;
+      }
+    }
+
+    /* Skills bars */
+    .skill-bar-bg {
+      background: #374151;
+      border-radius: 9999px;
+      height: 1rem;
+      overflow: hidden;
+    }
+    .skill-bar-fill {
+      background: #ec4899;
+      height: 100%;
+      border-radius: 9999px;
+      transition: width 1s ease;
+    }
+
+    /* Contact & Footer */
+    footer {
+      color: #9ca3af;
+    }
+  </style>
+</head>
+<body class="dark">
+
+  <!-- Floating Background Circles -->
+  <div class="floating-shape shape1"></div>
+  <div class="floating-shape shape2"></div>
+
+  <!-- Navbar -->
+  <nav class="w-full bg-[rgba(0,0,0,0.5)] backdrop-blur-sm fixed top-0 left-0 z-50">
+    <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+      <a href="#" class="text-2xl font-extrabold gradient-text select-none">Jahid</a>
+      <button id="mobile-menu-button" aria-label="Toggle menu">☰</button>
+      <ul id="nav-links" class="flex space-x-6 font-semibold items-center">
+        <li><a href="#about">About</a></li>
+        <li><a href="#education">Education</a></li>
+        <li><a href="#skills">Skills</a></li>
+        <li><a href="#projects">Projects</a></li>
+        <li><a href="#contact">Contact</a></li>
+        <li>
+          <a href="your_resume.pdf" download class="bg-pink-500 hover:bg-pink-600 text-white px-4 py-2 rounded-full font-semibold transition">
+            Download Resume
+          </a>
+        </li>
+        <li>
+          <button id="theme-toggle" aria-label="Toggle Dark/Light Theme" class="text-pink-500 text-xl font-bold px-3 py-1 rounded border border-pink-500 hover:bg-pink-500 hover:text-white transition">
+            🌙
+          </button>
+        </li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <section id="hero" class="flex flex-col justify-center items-center min-h-screen pt-24 px-6 text-center space-y-6">
+    <h1 class="text-5xl md:text-7xl font-extrabold gradient-text">Hello, I'm Jahid</h1>
+    <h2 class="text-3xl md:text-4xl font-semibold text-pink-400 min-h-[48px]" id="typewriter"></h2>
+    <p class="max-w-xl text-gray-300 dark:text-gray-700 text-lg md:text-xl">
+      Fresher Frontend Web Developer with skills in HTML5, CSS3, Tailwind CSS, JavaScript, Python, MySQL, Ubuntu Server & Networking.
+    </p>
+    <a href="#projects" class="inline-block bg-pink-500 hover:bg-pink-600 text-white font-semibold rounded-full px-8 py-3 mt-4 transition">See My Work</a>
+  </section>
+
+  <!-- About -->
+  <section id="about" class="max-w-6xl mx-auto px-6 py-16 fade-up">
+    <h2 class="text-4xl font-bold mb-6 border-b-4 border-pink-500 inline-block">About Me</h2>
+    <div class="flex flex-col md:flex-row md:space-x-12 items-center">
+      <img src="jahid pic.jpg" alt="Jahid Profile Picture" class="rounded-3xl shadow-lg w-64 mb-8 md:mb-0" />
+      <div class="text-gray-300 dark:text-gray-700 text-lg max-w-xl">
+        <p>
+          I'm a passionate frontend web developer eager to build clean, responsive, and user-friendly websites and web apps.  
+          Skilled in Tailwind CSS and JavaScript, with knowledge of backend basics including Python, MySQL, and server management on Ubuntu.
+          I’m also experienced in networking concepts, making me a versatile candidate for modern web development roles.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Education -->
+  <section id="education" class="max-w-6xl mx-auto px-6 py-16 fade-up">
+    <h2 class="text-4xl font-bold mb-6 border-b-4 border-pink-500 inline-block">Educational Qualification</h2>
+    <div class="text-gray-300 dark:text-gray-700 max-w-4xl mx-auto space-y-8 text-lg">
+      <div>
+        <h3 class="text-2xl font-semibold text-pink-400 mb-2">B.Sc. Engineering</h3>
+        <p><strong>Institution:</strong> Bangladesh University of Business and Technology (BUBT)</p>
+        <p><strong>Department:</strong> Computer Science Engineering (CSE)</p>
+        <p><strong>Passing Year:</strong> 2027</p>
+        <p><strong>Result:</strong> Appeared</p>
+      </div>
+      <div>
+        <h3 class="text-2xl font-semibold text-pink-400 mb-2">Diploma in Engineering (Polytechnic)</h3>
+        <p><strong>Institution:</strong> National Polytechnic institute, Dhaka</p>
+        <p><strong>Board:</strong> BTEB (Bangladesh Technical Education Board)</p>
+        <p><strong>Department:</strong> Computer Technology</p>
+        <p><strong>Passing Year:</strong> 2022</p>
+        <p><strong>Result:</strong> 3.66</p>
+      </div>
+      <div>
+        <h3 class="text-2xl font-semibold text-pink-400 mb-2">Dakhil (Madrasah)</h3>
+        <p><strong>Institution:</strong> Muhammadabad Islamia Alim Madrasah</p>
+        <p><strong>Board:</strong> Madrasha</p>
+        <p><strong>Group:</strong> Humanities</p>
+        <p><strong>Passing Year:</strong> 2017</p>
+        <p><strong>Result:</strong> 4.15</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Skills -->
+  <section id="skills" class="max-w-6xl mx-auto px-6 py-16 fade-up">
+    <h2 class="text-4xl font-bold mb-8 border-b-4 border-pink-500 inline-block">Skills</h2>
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+      <div>
+        <div class="text-6xl mb-2 text-pink-500">💻</div>
+        <h3 class="text-xl font-semibold">HTML5</h3>
+        <p class="text-gray-400 dark:text-gray-600 mt-1">90%</p>
+        <div class="skill-bar-bg mt-2">
+          <div class="skill-bar-fill" style="width:90%"></div>
+        </div>
+      </div>
+      <div>
+        <div class="text-6xl mb-2 text-pink-500">🎨</div>
+        <h3 class="text-xl font-semibold">CSS3 / Tailwind</h3>
+        <p class="text-gray-400 dark:text-gray-600 mt-1">85%</p>
+        <div class="skill-bar-bg mt-2">
+          <div class="skill-bar-fill" style="width:85%"></div>
+        </div>
+      </div>
+      <div>
+        <div class="text-6xl mb-2 text-pink-500">🟨</div>
+        <h3 class="text-xl font-semibold">JavaScript</h3>
+        <p class="text-gray-400 dark:text-gray-600 mt-1">75%</p>
+        <div class="skill-bar-bg mt-2">
+          <div class="skill-bar-fill" style="width:75%"></div>
+        </div>
+      </div>
+      <div>
+        <div class="text-6xl mb-2 text-pink-500">🐍</div>
+        <h3 class="text-xl font-semibold">Python</h3>
+        <p class="text-gray-400 dark:text-gray-600 mt-1">65%</p>
+        <div class="skill-bar-bg mt-2">
+          <div class="skill-bar-fill" style="width:65%"></div>
+        </div>
+      </div>
+      <div>
+        <div class="text-6xl mb-2 text-pink-500">🗄️</div>
+        <h3 class="text-xl font-semibold">MySQL</h3>
+        <p class="text-gray-400 dark:text-gray-600 mt-1">70%</p>
+        <div class="skill-bar-bg mt-2">
+          <div class="skill-bar-fill" style="width:70%"></div>
+        </div>
+      </div>
+      <div>
+        <div class="text-6xl mb-2 text-pink-500">🖥️</div>
+        <h3 class="text-xl font-semibold">Ubuntu Server</h3>
+        <p class="text-gray-400 dark:text-gray-600 mt-1">70%</p>
+        <div class="skill-bar-bg mt-2">
+          <div class="skill-bar-fill" style="width:70%"></div>
+        </div>
+      </div>
+      <div>
+        <div class="text-6xl mb-2 text-pink-500">🌐</div>
+        <h3 class="text-xl font-semibold">Networking</h3>
+        <p class="text-gray-400 dark:text-gray-600 mt-1">75%</p>
+        <div class="skill-bar-bg mt-2">
+          <div class="skill-bar-fill" style="width:75%"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Projects -->
+  <section id="projects" class="max-w-6xl mx-auto px-6 py-16 fade-up">
+    <h2 class="text-4xl font-bold mb-8 border-b-4 border-pink-500 inline-block">Projects</h2>
+    <div id="projectContainer" class="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+      <!-- Project cards populated by JS -->
+    </div>
+  </section>
+
+  <!-- Contact -->
+  <section id="contact" class="max-w-6xl mx-auto px-6 py-16 fade-up">
+    <h2 class="text-4xl font-bold mb-6 border-b-4 border-pink-500 inline-block">Contact Info</h2>
+    <div class="text-lg max-w-3xl mx-auto text-gray-300 dark:text-gray-700 space-y-2">
+      <p><strong>Mailing Address:</strong><br>
+        31/25/2 - Meddle Paikpara,<br>
+        Mirpur-1, Dhaka-1216
+      </p>
+      <p><strong>Email:</strong> <a href="mailto:mmdjjahid@gmail.com" class="text-pink-400 hover:text-pink-500">mmdjjahid@gmail.com</a></p>
+      <p><strong>Phone:</strong> <a href="tel:+8801953625689" class="text-pink-400 hover:text-pink-500">01953625689</a></p>
+      <p><strong>Portfolio:</strong> <a href="http://www.jahid-info.com" target="_blank" class="text-pink-400 hover:text-pink-500">www.jahid-info.com</a></p>
+      <p><strong>LinkedIn:</strong> <a href="https://www.linkedin.com/in/mmdjjahid/" target="_blank" class="text-pink-400 hover:text-pink-500">www.linkedin.com/in/mmdjjahid/</a></p>
+    </div>
+  </section>
+
+  <footer class="py-8 text-center text-sm text-gray-400">
+    &copy; 2025 Jahid. All rights reserved.
+  </footer>
+
+  <script>
+    // Mobile nav toggle
+    const mobileBtn = document.getElementById('mobile-menu-button');
+    const navLinks = document.getElementById('nav-links');
+    mobileBtn.addEventListener('click', () => {
+      navLinks.classList.toggle('open');
+    });
+
+    // Projects data
+    const projects = [
+      {
+        name: "Protfolio Site",
+        desc: "Personal portfolio site featuring smooth animations and responsive design.",
+        link: "https://github.com/mmdjjahid/protfolio-site"
+      },
+      {
+        name: "New Year Offer",
+        desc: "Festive themed HTML site with creative design and CSS effects.",
+        link: "https://github.com/mmdjjahid/new-year-offer"
+      }
+    ];
+
+    // Render Projects
+    const projectContainer = document.getElementById('projectContainer');
+    projects.forEach(({name, desc, link}) => {
+      const card = document.createElement('div');
+      card.className = 'project-card fade-up';
+      card.innerHTML = `
+        <h3 class="text-2xl font-semibold text-pink-400 mb-3">${name}</h3>
+        <p class="mb-5">${desc}</p>
+        <a href="${link}" target="_blank" class="inline-block text-pink-500 hover:text-pink-400 font-semibold">View Project &rarr;</a>
+      `;
+      projectContainer.appendChild(card);
+    });
+
+    // Scroll fade-up animations
+    const faders = document.querySelectorAll('.fade-up');
+    const appearOptions = {threshold: 0.3};
+    const appearOnScroll = new IntersectionObserver((entries, appearOnScroll) => {
+      entries.forEach(entry => {
+        if (!entry.isIntersecting) return;
+        entry.target.classList.add('show');
+        appearOnScroll.unobserve(entry.target);
+      });
+    }, appearOptions);
+    faders.forEach(fader => appearOnScroll.observe(fader));
+
+    // Parallax effect for floating shapes
+    const shape1 = document.querySelector('.shape1');
+    const shape2 = document.querySelector('.shape2');
+
+    window.addEventListener('scroll', () => {
+      const scrollY = window.scrollY;
+      shape1.style.transform = `translateY(${scrollY * 0.3}px) translateX(0)`;
+      shape2.style.transform = `translateY(${scrollY * -0.25}px) translateX(0)`;
+    });
+
+    // Theme toggle
+    const themeToggleBtn = document.getElementById('theme-toggle');
+    themeToggleBtn.addEventListener('click', () => {
+      if (document.body.classList.contains('dark')) {
+        document.body.classList.remove('dark');
+        document.body.classList.add('light');
+        themeToggleBtn.textContent = '☀️';
+      } else {
+        document.body.classList.remove('light');
+        document.body.classList.add('dark');
+        themeToggleBtn.textContent = '🌙';
+      }
+    });
+
+    // Typewriter effect
+    const typewriterText = ["Frontend Web Developer", "Python Programmer", "Ubuntu Server Admin", "Networking Enthusiast"];
+    let typeIndex = 0;
+    let charIndex = 0;
+    const typewriterElem = document.getElementById('typewriter');
+    function typetest (typewriterElem){
+        function type() {
+      if (charIndex < typewriterText[typeIndex].length) {
+        typewriterElem.textContent += typewriterText[typeIndex].charAt(charIndex);
+        charIndex++;
+        setTimeout(type, 100);
+      } else {
+        setTimeout(erase, 1500);
+      }
+    }
+
+    function erase() {
+      if (charIndex > 0) {
+        typewriterElem.textContent = typewriterText[typeIndex].substring(0, charIndex - 1);
+        charIndex--;
+        setTimeout(erase, 50);
+      } else {
+        typeIndex++;
+        if (typeIndex >= typewriterText.length) typeIndex = 0;
+        setTimeout(type, 500);
+      }
+    }
+
+    setTimeout(type, 1000);
+    }
+    typetest (typewriterElem)
+    
+  </script>
+
+</body>
+</html>
